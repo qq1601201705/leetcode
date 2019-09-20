@@ -1,0 +1,105 @@
+# 给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
+# 如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
+# 您可以假设除了数字 0 之外，这两个数都不会以 0 开头。
+# 示例：
+# 输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)
+# 输出：7 -> 0 -> 8
+# 原因：342 + 465 = 807
+# def addTwoNumbers(self, l1: ListNode, l2: ListNode) -> ListNode:
+
+
+# 思路：由于这里题目给定的是逆序(我记得在leetcode上有对应的顺序的题目)逆序刚好可以保证是从个位数开始算
+# 所以既可以自制运算方法,也可以放进lst中最后计算,既然自制算法也并不是很麻烦,我这里选择自制运算方法(思路简单但是写起来麻烦)
+# 然后用列表帮助记数，重建一个链表(思路和写法都很简单)
+# 反思：
+# 解法1 写起来超麻烦，下次可以考虑新建一个方法传入节点，在方法内部使用时把None当作0来用，应该会方便一些
+# 最终用时击败99%算是安慰吧, 附上写起来超轻松的，用列表的解法(主要是链表加了还要注意需不需要取余和新建节点实在太麻烦了)
+
+
+class Solution:
+    def addTwoNumbers(self, l1, l2):
+        if l1 == None:
+            return l2
+        elif l2 == None:
+            return l1
+        ll = l1
+        pre = ListNode(None)
+        pre.next = l1
+        rec = 0
+        while l1 != None and l2 != None:
+            res = rec + l1.val + l2.val
+            if res > 9:
+                l1.val = res % 10
+                rec = 1
+            else:
+                l1.val = res
+                rec = 0
+            l1 = l1.next
+            l2 = l2.next
+            pre = pre.next
+        if rec == 0:
+            if l1 != None:
+                return ll
+            else:
+                pre.next = l2
+                return ll
+        cur = pre
+        while rec != 0:
+            if l1 != None:
+                res = l1.val + rec
+            elif l2 != None:
+                res = l2.val + rec
+            else:
+                res = rec
+            if res > 9:
+                res = res % 10
+                rec = 1
+            else:
+                res = res
+                rec = 0
+            if l1 != None:
+                l1.val = res
+                cur.next = l1
+                l1 = l1.next
+            elif l2 != None:
+                cur.next = ListNode(res)
+                l2 = l2.next
+            else:
+                cur.next = ListNode(res)
+            cur = cur.next
+        if l1 != None:
+            cur.next = l1
+        if l2 != None:
+            cur.next = l2
+        return ll
+
+
+class Solution:
+    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -> ListNode:
+        if l1 == None:
+            return l2
+        elif l2 == None:
+            return l1
+        ll = l1
+        lst1 = []
+        lst2 = []
+        while l1 != None and l2 != None:
+            lst1.insert(0, str(l1.val))
+            lst2.insert(0, str(l2.val))
+            l1 = l1.next
+            l2 = l2.next
+        while l1 != None:
+            lst1.insert(0, str(l1.val))
+            l1 = l1.next
+        while l2 != None:
+            lst2.insert(0, str(l2.val))
+            l2 = l2.next
+        res1 = ''.join(lst1)
+        res2 = ''.join(lst2)
+        res = str(int(res1) + int(res2))
+        size = len(res)
+        cur = pre = ListNode(None)
+        for i in range(1, size+1):
+            cur.next = ListNode(int(res[-i]))
+            cur = cur.next
+        return pre.next
