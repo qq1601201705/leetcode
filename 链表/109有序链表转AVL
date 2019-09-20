@@ -1,0 +1,48 @@
+# 给定一个单链表，其中的元素按升序排序，将其转换为高度平衡的二叉搜索树。
+# 本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1。
+# 示例:
+# 给定的有序链表： [-10, -3, 0, 5, 9],
+# 一个可能的答案是：[0, -3, 9, -10, null, 5], 它可以表示下面这个高度平衡二叉搜索树：
+#       0
+#      / \
+#    -3   9
+#    /   /
+#  -10  5
+# def sortedListToBST(self, head: ListNode) -> TreeNode:
+
+
+# 思路：从一般解法上来说, 有序固然跟二叉搜索树是天然契合的, 但是由于链表无法随机访问
+# 导致直接的寻找中值建二叉树变得困难, 这算是链表的特性带来的一个比较重要的不足
+# 解法有很多, 比如先寻找整段链表的中值节点, 把链表分成左右两个链表, 中值做成根节点
+# 然后递归寻找中值节点, 递归建树
+#             但是很明显树用的节点和链表用的节点结构是不一样的,
+#                     所以其实还是在于值的传递
+#         如果是链表的节点传递当然最好是避免使用列表(与作弊无异),
+#         但是这明显是一个传递值构建树的过程, 换言之用链表也是为了传递值,
+#             所以强行保持链表属性毫无意义, 所以我选用列表来解答
+# 与其多次重复在链表上移动获取值, 不如直接一次获取所有值并存入列表中来得方便
+
+
+class Solution:
+    def sortedListToBST(self, head):
+        if head == None:
+            return
+        lst = []
+        # 把值存入列表
+        while head != None:
+            lst.append(head.val)
+            head = head.next
+        size = len(lst)
+        # 递归建树
+        node = self.betree(0, size - 1, lst)
+        return node
+
+    def betree(self, l, r, lst):
+        # 跟二分搜索很相似
+        if l > r:
+            return
+        mid = int((l + r) / 2)
+        node = TreeNode(lst[mid])
+        node.left = self.betree(l, mid - 1, lst)
+        node.right = self.betree(mid + 1, r, lst)
+        return node
