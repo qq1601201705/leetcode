@@ -1,0 +1,56 @@
+# 给定一个链表，旋转链表，将链表每个节点向右移动 k 个位置，其中 k 是非负数。
+# 示例 1:
+# 输入: 1->2->3->4->5->NULL, k = 2
+# 输出: 4->5->1->2->3->NULL
+# 解释:
+# 向右旋转 1 步: 5->1->2->3->4->NULL
+# 向右旋转 2 步: 4->5->1->2->3->NULL
+# 示例 2:
+# 输入: 0->1->2->NULL, k = 4
+# 输出: 2->0->1->NULL
+# 解释:
+# 向右旋转 1 步: 2->0->1->NULL
+# 向右旋转 2 步: 1->2->0->NULL
+# 向右旋转 3 步: 0->1->2->NULL
+# 向右旋转 4 步: 2->0->1->NULL
+# def rotateRight(self, head: ListNode, k: int) -> ListNode:
+
+
+# 思路：采用快慢指针和虚拟头节点,可以先分成两段,重新连上
+# 注意：由于这里的k并没有说明是否会超出链表的上限,所以我决定先进行假设性记数
+# 如果发现超出上限的话这次记数将会提供给我们这段链表的长度
+# 击败99.7 开心
+
+
+class Solution:
+    def rotateRight(self, head, k):
+        if head == None:
+            return
+        if k == 0:
+            return head
+        pre = fast = dummyhead = ListNode(None)
+        fast.next = head
+        num = 0
+        for i in range(k+1):
+            fast = fast.next
+            if fast == None:
+                break
+            num += 1
+        # 如果是break出来的话num会小于k+1, 说明k超出了链表的上限, num就是链表有的节点数
+        if num < k+1: # 这种情况k超过了链表上限
+            k = k % num
+            fast = dummyhead
+            for i in range(k + 1):
+                fast = fast.next
+        while fast != None:
+            fast = fast.next
+            pre = pre.next
+        cur = pre.next
+        if cur == None:
+            return head
+        pre.next = None
+        dummyhead.next = cur
+        while cur.next != None:
+            cur = cur.next
+        cur.next = head
+        return dummyhead.next
