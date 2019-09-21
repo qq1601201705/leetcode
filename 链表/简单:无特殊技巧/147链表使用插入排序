@@ -1,0 +1,42 @@
+# 对链表进行插入排序。
+# 插入排序的动画演示如上。从第一个元素开始，该链表可以被认为已经部分排序（用黑色表示）。
+# 每次迭代时，从输入数据中移除一个元素（用红色表示），并原地将其插入到已排好序的链表中。
+# 插入排序算法：
+# 插入排序是迭代的，每次只移动一个元素，直到所有元素可以形成一个有序的输出列表。
+# 每次迭代中，插入排序只从输入数据中移除一个待排序的元素，找到它在序列中适当的位置，并将其插入。
+# 重复直到所有输入数据插入完为止。
+# 示例 1：
+# 输入: 4->2->1->3
+# 输出: 1->2->3->4
+# 示例 2：
+# 输入: -1->5->3->4->0
+# 输出: -1->0->3->4->5
+# def insertionSortList(self, head: ListNode) -> ListNode:
+
+
+# 思路：由于这个链表不是双向的, 所以普通列表中的插入排序是从接近新元素往开端走的,
+# 但是链表这里只能是从开端往接近新元素的一边走了, 但是考虑到有可能遇到有序链表排序的情况
+# 留一个指针cur作为最接近新节点的指针, 先检查已排序部分最后一个指针是否小于等于新元素
+
+
+class Solution:
+    def insertionSortList(self, head):
+        if head == None:
+            return
+        dummy = ListNode(None)
+        dummy.next = head
+        cur = head
+        head = head.next
+        while head != None:
+            if head.val >= cur.val:
+                cur = head
+                head = head.next
+            else:
+                cur.next = head.next
+                pre = dummy
+                while pre.next.val < head.val:
+                    pre = pre.next
+                head.next = pre.next
+                pre.next = head
+                head = cur.next
+        return dummy.next
