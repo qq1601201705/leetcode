@@ -1,0 +1,77 @@
+# 给定一个二叉树，返回它的中序 遍历。
+# 示例:
+# 输入: [1,null,2,3]
+#    1
+#     \
+#      2
+#     /
+#    3
+# 输出: [1,3,2]
+# 进阶: 递归算法很简单，你可以通过迭代算法完成吗？
+# def inorderTraversal(self, root: TreeNode) -> List[int]:
+
+
+# 思路：从根节点开始, 向左子树走, 把路过的所有节点都压入栈(包括空)
+# 直到为空, 说明到达了当前树的最左端, 由于是中序遍历, 这时候可以回一步
+# 变成空之前的那个节点, 把节点值记录下来, 把右子树压入栈中(包括空)
+# 如果右子树为空就会回一步, 如果不为空就会把刚才的步骤再进行一次
+# 这和递归的思路很相似
+# 另外附上我自创的利用栈的特性来进行的中序遍历(当然比起标准的思路要复杂和麻烦不少)
+from queue import LifoQueue
+
+
+class Solution:
+    def inorderTraversal(self, root):
+        if root == None:
+            return None
+        p = LifoQueue()
+        lst = []
+        while root != None or not p.empty():
+            if root != None:
+                p.put(root)
+                root = root.left
+            else:
+                root = p.get()
+                lst.append(root.val)
+                root = root.right
+        return lst
+
+
+
+
+
+
+
+
+
+
+# 二叉树的前中后序遍历的非递归写法是一个典型的使用栈的例子(因为他们都需要在
+# 遍历一个子节点后回到父节点或者通过父节点的帮助去遍历另一个子节点), 这恰恰用到了
+# 栈的后进先出特性来返回父节点, 对于中序遍历来说,做法主要是先从根节点开始把根节点压入栈
+# 然后把左节点压入栈, 直至树的最左端, 然后可以开始获取节点(此时此节点就是一棵二叉树
+# 中最左端的二叉树), 所以在读取了自己的值后, 开始判断右子树是否为空, 不为空则进入右
+# 子树开始下一次前序遍历, 直到读取了值的树的右子树为空的时候, 那棵树算遍历完成了,
+# 继续从栈中出去那棵树的父节点, 直至最后取出根节点
+
+
+class Solution:
+    def inorderTraversal(self, root):
+        if root == None:
+            return
+        cur = root
+        lst = []
+        q = LifoQueue()
+        q.put(cur)
+        while cur.left != None:
+            cur = cur.left
+            q.put(cur)
+        while not q.empty():
+            cur = q.get()
+            lst.append(cur.val)
+            if cur.right != None:
+                cur = cur.right
+                q.put(cur)
+                while cur.left != None:
+                    cur = cur.left
+                    q.put(cur)
+        return lst
