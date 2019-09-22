@@ -15,7 +15,7 @@
 # 直到为空, 说明到达了当前树的最左端, 由于是中序遍历, 这时候可以回一步
 # 变成空之前的那个节点, 把节点值记录下来, 把右子树压入栈中(包括空)
 # 如果右子树为空就会回一步, 如果不为空就会把刚才的步骤再进行一次
-# 这和递归的思路很相似
+# 这和递归的思路很相似, 基本就是递归思路的改写, 非常巧妙, 附上分析
 # 另外附上我自创的利用栈的特性来进行的中序遍历(当然比起标准的思路要复杂和麻烦不少)
 from queue import LifoQueue
 
@@ -27,22 +27,21 @@ class Solution:
         p = LifoQueue()
         lst = []
         while root != None or not p.empty():
+            # if root == None:
+            #    return None
+            # self.inorder(self, root.left)
+            # lst.append(root.val)
+            # self.inorder(self, root.right)
             if root != None:
+            # 当root不为空的时候, 传入左节点递归, 直到为空, 对应32行
                 p.put(root)
                 root = root.left
             else:
+            # 当root为空的时候(32行), 返回上一层节点, 并且记录值, 递归该节点的右节点, 对应33,34行
                 root = p.get()
                 lst.append(root.val)
                 root = root.right
         return lst
-
-
-
-
-
-
-
-
 
 
 # 二叉树的前中后序遍历的非递归写法是一个典型的使用栈的例子(因为他们都需要在
