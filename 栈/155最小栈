@@ -29,10 +29,10 @@ class MinStack:
             self.helper.append(val)
 
     def pop(self):
-        top = self.data.pop()
-        if self.helper and top == self.helper[-1]:
+        res = self.data.pop()
+        if self.helper and res == self.helper[-1]:
             self.helper.pop()
-        return top
+        return res
     
     def top(self):
         if self.data:
