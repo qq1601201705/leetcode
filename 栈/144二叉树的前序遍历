@@ -1,0 +1,38 @@
+# 给定一个二叉树，返回它的 前序 遍历。
+#  示例:
+# 输入: [1,null,2,3]
+#    1
+#     \
+#      2
+#     /
+#    3
+# 输出: [1,2,3]
+# def preorderTraversal(self, root: TreeNode) -> List[int]:
+
+
+# 思路：二叉树的前序遍历的非递归写法是典型的使用栈的例子, 核心原因是偏深度型的遍历
+# (不会在获取了一个二叉树的左节点后直接获取同级右节点, 而是要先获取左子树的左子树)
+# 这决定了在遍历了一个树的左子树后必须依靠返回父节点的方式去遍历右子树, 要从子节点
+# 返回父节点, 是典型的后进先出结构, 使用栈
+# 对于前序遍历来说, 由于使用栈这种后进先出结构能够让我们遍历了一个树的左子树后能够
+# 返回到父节点进而遍历右子树, 这里反而形成一个思维误区, 以为压入栈的顺序是父左右
+# 其实对于栈来说, 如果想先出栈的子树是左子树的话, 反而应该先压入右子树
+from queue import LifoQueue
+
+
+class Solution:
+    def preorderTraversal(self, root):
+        if root == None:
+            return
+        cur = root
+        q = LifoQueue()
+        lst = []
+        q.put(cur)
+        while not q.empty():
+            cur = q.get()
+            lst.append(cur.val)
+            if cur.right != None:
+                q.put(cur.right)
+            if cur.left != None:
+                q.put(cur.left)
+        return lst
