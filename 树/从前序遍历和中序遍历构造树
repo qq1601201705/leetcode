@@ -1,0 +1,34 @@
+# 根据一棵树的前序遍历与中序遍历构造二叉树。
+# 注意:
+# 你可以假设树中没有重复的元素。
+# 例如，给出
+# 前序遍历 preorder = [3,9,20,15,7]
+# 中序遍历 inorder = [9,3,15,20,7]
+# 返回如下的二叉树：
+#     3
+#    / \
+#   9  20
+#     /  \
+#    15   7
+# def buildTree(self, preorder: List[int], inorder: List[int]) -> TreeNode:
+
+
+# 思路：从前序找到根，在中序的对应位置，把列表中序列表分成两份，
+# 左边为左树的，右边为右树的,
+# 注意前序是引用传递然后取出, 中序遍历的列表是深拷贝的
+# 106是从中后序构造一棵树, 比这题要复杂得多, 有时间要去完成
+
+
+class Solution:
+    def buildTree(self, preorder, inorder):
+        return self.helper(preorder,inorder)
+
+    def helper(self, preorder, inorder):
+        if inorder == []:
+            return
+        node = TreeNode(preorder[0])
+        index = inorder.index(preorder[0])
+        preorder.pop(0)
+        node.left = self.helper(preorder, inorder[:index])
+        node.right = self.helper(preorder, inorder[index+1:])
+        return node
