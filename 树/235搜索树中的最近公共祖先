@@ -1,0 +1,33 @@
+# 给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
+# 百度百科中最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+# 例如，给定如下二叉搜索树:  root = [6,2,8,0,4,7,9,null,null,3,5]
+# 示例 1:
+# 输入: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8
+# 输出: 6
+# 解释: 节点 2 和节点 8 的最近公共祖先是 6。
+# 示例 2:
+# 输入: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4
+# 输出: 2
+# 解释: 节点 2 和节点 4 的最近公共祖先是 2, 因为根据定义最近公共祖先节点可以为节点本身。
+# 注：这是二分搜索树,且所有节点值唯一
+# def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+
+
+# 思路：两个值有较大较小者，从根节点开始，如果下沉遇到了节点是二者之一
+# (且下沉方向相同)，说明这个节点是另一个节点的祖先,
+# 如果下沉方向不同，说明上一层的节点就是公共祖先
+# 还有236题跟这题很像, 不过复杂一些, 有很巧妙的解法
+
+
+class Solution:
+    def lowestCommonAncestor(self, root, p, q):
+        maxval = max(p.val, q.val)
+        minval = min(p.val, q.val)
+        while not (root.val == maxval or root.val == minval):
+            if minval < root.val < maxval:
+                return root
+            elif root.val > maxval:
+                root = root.left
+            elif root.val < minval:
+                root = root.right
+        return root
