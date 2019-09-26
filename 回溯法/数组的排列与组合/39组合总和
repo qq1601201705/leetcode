@@ -1,0 +1,45 @@
+# 给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+# candidates 中的数字可以无限制重复被选取。
+# 说明：
+# 所有数字（包括 target）都是正整数。
+# 解集不能包含重复的组合。 
+# 示例 1:
+# 输入: candidates = [2,3,6,7], target = 7,
+# 所求解集为:
+# [
+#   [7],
+#   [2,2,3]
+# ]
+# 示例 2:
+# 输入: candidates = [2,3,5], target = 8,
+# 所求解集为:
+# [
+#   [2,2,2,2],
+#   [2,3,3],
+#   [3,5]
+# ]
+# def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+
+
+# 思路：简单的回溯，由于数字可以无限被提取，回溯算法中回退的一步pop自不用说，重点在于剪枝处理
+# 详细的关于组合剪枝手法的分析可以看leetcode解题集首页的剪枝分析
+# 复杂的点在于不能有重复解，也就是‘组合’的问题，要剔除重复解用set的话也不行，因为顺序有改动，
+# 解法是一个参数start，他记录了当前用的值，如果遇到了值比当前的值要小，说明已经在前面的解里，那就跳过
+
+
+class Solution:
+    def combinationSum(self, candidates, target):
+        self.lst = []
+        self.size = len(candidates)
+        self.backtrack(candidates, target, 0, 0, [])
+        return self.lst
+
+    def backtrack(self, candidates, target, start, total, lst):
+        if total == target:
+            self.lst.append(lst[:])
+            return
+        for i in range(self.size):
+            if total + candidates[i] <= target and candidates[i] >= start:
+                lst.append(candidates[i])
+                self.backtrack(candidates, target, candidates[i], total+candidates[i], lst)
+                lst.pop()
