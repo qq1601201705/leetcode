@@ -1,0 +1,53 @@
+# 给定一个数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+# candidates 中的每个数字在每个组合中只能使用一次。
+# 说明：
+# 所有数字（包括目标数）都是正整数。
+# 解集不能包含重复的组合。 
+# 示例 1:
+# 输入: candidates = [10,1,2,7,6,1,5], target = 8,
+# 所求解集为:
+# [
+#   [1, 7],
+#   [1, 2, 5],
+#   [2, 6],
+#   [1, 1, 6]
+# ]
+# 示例 2:
+# 输入: candidates = [2,5,2,1,2], target = 5,
+# 所求解集为:
+# [
+#   [1,2,2],
+#   [5]
+# ]
+# def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+
+
+# 思路：这种比39题的更复杂一点，因为他有重复元素，但是没关系，
+# 对于没有复用元素的基础的回溯算法一定是通过visited表来表示已用
+# 中等难度的回溯，由于存在重复元素所以要在基础的非复用情况下的回溯算法基础上增加一个剪枝判断，
+# 在for循环的内容增加一个判断，如果同层循环中获取的这个数不比上一个数就否决这种可能
+# 详细的关于组合剪枝手法的分析可以看leetcode解题集首页的剪枝分析
+
+
+class Solution:
+    def combinationSum2(self, candidates, target):
+        self.lst = []
+        self.size = len(candidates)
+        candidates.sort()
+        # self.visited = [False] * self.size
+        self.backtrack(candidates, target, 0, 0, [])
+        return self.lst
+
+
+    def backtrack(self, candidates, target, record, total, lst):
+        if total == target:
+            self.lst.append(lst[:])
+            return
+        last = 0
+        for i in range(record, self.size):
+            if candidates[i] + total <= target and last < candidates[i]:
+                last = candidates[i]
+                lst.append(candidates[i])
+                self.backtrack(candidates, target, i+1, total + candidates[i], lst)
+                lst.pop()
+        return
