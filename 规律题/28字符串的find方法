@@ -28,6 +28,7 @@ class Solution:
         for i in range(len(haystack)-size+1):
             if haystack[i] == needle[0]:
                 ha = haystack[i:i + size]
+                # 也可以直接查, if ha == needle:return i
                 k = 0
                 for j in range(size):
                     if ha[j] != needle[j]:
