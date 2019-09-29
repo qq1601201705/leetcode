@@ -1,0 +1,41 @@
+# 给出 n 代表生成括号的对数，请你写出一个函数，使其能够生成所有可能的并且有效的括号组合。
+# 例如，给出 n = 3，生成结果为：
+# [
+#   "((()))",
+#   "(()())",
+#   "(())()",
+#   "()(())",
+#   "()()()"
+# ]
+# def generateParenthesis(self, n: int) -> List[str]:
+
+
+# 思路：回溯并且判断出不合理(括号无效)的可能否决掉,合理的可能放入列表
+
+
+class Solution:
+    def generateParenthesis(self, n):
+        self.visited = {-1:n, 1:n}
+        self.dct = {-1:')', 1:'('}
+        self.res = []
+        self.dfs(2*n, 0, 0, [])
+        return self.res
+
+
+    def dfs(self, n, index, total, lst):
+        # 这里的n就是上面的2*n, 减少计算
+        if total < 0:
+            return
+        if index == n and total == 0:
+            lst = [self.dct[i] for i in lst]
+            print(lst)
+            res = ''.join(lst)
+            self.res.append(res)
+        for i in self.visited:
+            if self.visited[i] > 0:
+                self.visited[i] -= 1
+                lst.append(i)
+                self.dfs(n, index+1, total+i, lst)
+                lst.pop()
+                self.visited[i] += 1
+        return
