@@ -1,0 +1,41 @@
+# 给定一个按照升序排列的整数数组 nums，和一个目标值
+# target。找出给定目标值在数组中的开始位置和结束位置。
+# 你的算法时间复杂度必须是 O(log n) 级别。
+# 如果数组中不存在目标值，返回 [-1, -1]。
+# 示例 1:
+# 输入: nums = [5,7,7,8,8,10], target = 8
+# 输出: [3,4]
+# 示例 2:
+# 输入: nums = [5,7,7,8,8,10], target = 6
+# 输出: [-1,-1]
+# def searchRange(self, nums: List[int], target: int) -> List[int]:
+
+
+# 思路：由于题目要求使用logN复杂度的算法, 所以这里使用二分搜索算法, 
+# 从基本的二分搜索的进行修改, 目前的算法还有优化的余地
+
+
+class Solution:
+    def searchRange(self, nums, target):
+        self.min = len(nums)
+        self.max = -1
+        r = self.min - 1
+        self.helper(nums, target, 0, r)
+        if self.min > self.max:
+            return [-1,-1]
+        return [self.min, self.max]
+
+    def helper(self, nums, target, l, r):
+        if l <= r:
+            mid = int((l+r)/2)
+            if nums[mid] > target:
+                # print(nums[l:mid])
+                self.helper(nums, target, l, mid-1)
+            elif nums[mid] < target:
+                # print(nums[mid+1:r])
+                self.helper(nums, target, mid+1, r)
+            else:
+                self.max = max(mid, self.max)
+                self.min = min(mid, self.min)
+                self.helper(nums, target, l, mid-1)
+                self.helper(nums, target, mid + 1, r)
