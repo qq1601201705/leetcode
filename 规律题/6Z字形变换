@@ -1,0 +1,45 @@
+# 将一个给定字符串根据给定的行数，以从上往下、从左到右进行 Z 字形排列。
+# 比如输入字符串为 "LEETCODEISHIRING" 行数为 3 时，排列如下：
+# L   C   I   R
+# E T O E S I I G
+# E   D   H   N
+# 之后，你的输出需要从左往右逐行读取，产生出一个新的字符串，比如："LCIRETOESIIGEDHN"。
+# 请你实现这个将字符串进行指定行数变换的函数：
+# string convert(string s, int numRows);
+# 示例 1:
+# 输入: s = "LEETCODEISHIRING", numRows = 3
+# 输出: "LCIRETOESIIGEDHN"
+# 示例 2:
+# 输入: s = "LEETCODEISHIRING", numRows = 4
+# 输出: "LDREOEIIECIHNTSG"
+# 解释:
+# L     D     R
+# E   O E   I I
+# E C   I H   N
+# T     S     G
+# def convert(self, s: str, numRows: int) -> str:
+
+
+# 思路：这道题明显是一道规律题, 重点在于找到删除字符串的规律
+# 明显给出的字符串将按照给定的行数设置, 以Z字形进行排列
+# 这里可以使用列表的功能, 在列表内创建要求数目的空字符串, 然后
+# 按照规律, 把对应位置的字符串增加到对应的字符串中, 最后把所有字符串合起来
+
+
+class Solution:
+    def convert(self, s, numRows):
+        if numRows == 1:
+            return s
+        lst = ['' for i in range(numRows)]
+        curRow = 0
+        turn = False
+        for i in s:
+            lst[curRow] += i
+            if curRow == 0 or curRow == numRows - 1:
+                turn = not turn
+            if turn:
+                curRow += 1
+            else:
+                curRow -= 1
+        res = ''.join(lst)
+        return res
