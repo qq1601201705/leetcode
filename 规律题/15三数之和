@@ -1,0 +1,46 @@
+# 给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在
+# 三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
+# 注意：答案中不可以包含重复的三元组。
+# 例如, 给定数组 nums = [-1, 0, 1, 2, -1, -4]，
+# 满足要求的三元组集合为：
+# [
+#   [-1, 0, 1],
+#   [-1, -1, 2]
+# ]
+# def threeSum(self, nums: List[int]) -> List[List[int]]:
+
+
+# 思路：这题最典型的就是暴力破解复杂度是O(N3),
+# 这类 在一个固定数组上进行多次循环 的问题,
+# 很大概率可以使用碰撞指针的思路, 两个指针分别从两边往中间
+# 靠拢直至两个指针重合, 先要把数组排序, 还有一个剪枝操作
+# 如果第三个游动的指针本身已经大于等于零, 可以直接结束
+# 由于不允许重复答案, 所以用集合来储存
+
+
+class Solution:
+    def threeSum(self, nums):
+        nums.sort()
+        ans = set()
+        size = len(nums)
+        mid = 0
+        while mid < size - 2:
+            l = mid + 1
+            r = size - 1
+            while l < r:
+                temp = nums[mid] + nums[l] + nums[r]
+                if temp == 0:
+                    ans.add((nums[mid], nums[l], nums[r]))
+                    l += 1
+                    r -= 1
+                elif temp < 0:
+                    l += 1
+                else:
+                    r -= 1
+            if nums[mid] >= 0:
+                break
+            mid += 1
+        res = []
+        for i in ans:
+            res.append(list(i))
+        return res
