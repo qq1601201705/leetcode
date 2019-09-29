@@ -1,0 +1,38 @@
+# 给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
+# 示例 1:
+# 输入: "(()"
+# 输出: 2
+# 解释: 最长有效括号子串为 "()"
+# 示例 2:
+# 输入: ")()())"
+# 输出: 4
+# 解释: 最长有效括号子串为 "()()"
+# def longestValidParentheses(self, s: str) -> int:
+
+
+# 思路：利用栈来判断括号是否有效, 并且进行计数
+# 由于存在类似'()(()'这种情况, 如果在最后结算一次把前面两个加进结果, 
+# 那结果是错误的,
+# 不结算最后一段有效的括号的话也是不正确的, 
+# 所以决定存入对应的索引, 而不是存入'('
+# 最后通过索引来加以判断
+from queue import LifoQueue
+
+
+class Solution:
+    def longestValidParentheses(self, s):
+        q = LifoQueue()
+        q.put(-1)
+        res = 0 # 结果值
+        for i in range(len(s)):
+            if s[i] == '(':
+                q.put(i)
+            else:
+                q.get()
+                if q.empty():
+                    q.put(i)
+                else:
+                    total = q.get()
+                    q.put(total)
+                    res = max(res, i-total)
+        return res
