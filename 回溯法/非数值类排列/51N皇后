@@ -1,0 +1,67 @@
+# n 皇后问题研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。
+# 上图为 8 皇后问题的一种解法。
+# 给定一个整数 n，返回所有不同的 n 皇后问题的解决方案。
+# 每一种解法包含一个明确的 n 皇后问题的棋子放置方案，该方案中 'Q' 和 '.' 分别代表了皇后和空位。
+# 示例:
+# 输入: 4
+# 输出: [
+#  [".Q..",  // 解法 1
+#   "...Q",
+#   "Q...",
+#   "..Q."],
+#  ["..Q.",  // 解法 2
+#   "Q...",
+#   "...Q",
+#   ".Q.."]
+# ]
+# 解释: 4 皇后问题存在两个不同的解法。
+# def solveNQueens(self, n: int) -> List[List[str]]:
+
+
+# 思路：这是一道很经典的回溯题, 更仔细的分析会发现, 这道回溯题是属于排列类的,
+# 跟数组类排列与组合类的回溯题略有不同, 主要在于排列与组合类型的回溯重在思考
+# 剪枝过程, 并且由于基本上都跟数组有关, 所以很多时候他们的占位是可以用数值本身
+# 的大小关系来判断的, 也就是说可以不需要一个实际的判断表也可以做到回溯。
+# 但是像8皇后这种经典的排列类回溯题, 他们的难点主要集中在判断占位的表的设定,
+# 一旦判断占位的表的设定想好了, 判断方案也就水到渠成了, 这种排除不合理答案的
+# 过程本身就是剪枝, 所以从这个角度来看, 像8皇后这类的回溯题, 跟数组上进行排列
+# 组合的回溯题略有不同
+# 这道8皇后的回溯题很明显在于判断占位表的设定, 在没有解决过这类涉及一个点的
+# 多重判断的时候, 很可能是解答不了的, 因为很难想像出怎么样可以设计出一个好的
+# 判断方案, 这里使用的是一列和两对角线的占位表辅助判断
+# 其实我一开始是想用xy坐标来做占位表的, 不过发现对待斜向判断会很难写, 所以
+# 参考标准8皇后解法, 用一列两对角线的占位表来辅助判断
+
+
+class Solution:
+    def solveNQueens(self, n):
+        if n == 0:
+            return []
+        self.res = []
+        self.col = [True] * n
+        self.dia1 = [True] * (2*n-1)
+        self.dia2 = [True] * (2*n-1)
+        self.dfs(n, 0, [])
+        return self.res
+
+    def dfs(self, n, index, lst):
+        if index == n:
+            self.res.append(self.helper(n, lst))
+            return
+        for i in range(n):
+            if self.col[i] and self.dia1[index+i] and self.dia2[index-i+n-1]:
+                self.col[i] = False
+                self.dia1[index + i] = False
+                self.dia2[index - i + n - 1] = False
+                lst.append(i)
+                self.dfs(n, index+1, lst)
+                self.col[i] = True
+                self.dia1[index + i] = True
+                self.dia2[index - i + n - 1] = True
+                lst.pop()
+
+    def helper(self, n, lst):
+        res = [['.' for i in range(n)] for j in range(n) ]
+        for i in range(n):
+            res[i][lst[i]] = 'Q'
+        return [''.join(i) for i in res]
