@@ -1,0 +1,27 @@
+# 给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+# 示例:
+# 输入: ["eat", "tea", "tan", "ate", "nat", "bat"],
+# 输出:
+# [
+#   ["ate","eat","tea"],
+#   ["nat","tan"],
+#   ["bat"]
+# ]
+# 说明：
+# 所有输入均为小写字母。
+# 不考虑答案输出的顺序。
+# def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+
+
+# 思路：这道题的具体思路有很多种, 包括使用素数来构成区别, 或者使用26的进制计算来构成区别,
+# 或者是把乱序单词先排序等思路, 但是基本上都是使用字典储存+O(NK)的时间复杂度, 所以我将选用
+# 乱序单词先排序的思路(比较直接)来解答这个问题
+from collections import defaultdict
+
+
+class Solution:
+    def groupAnagrams(self, strs):
+        dct = defaultdict(list)
+        for i in strs:
+            dct[''.join(sorted(i))].append(i)
+        return dct.values()
