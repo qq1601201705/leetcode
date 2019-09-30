@@ -1,0 +1,37 @@
+# 给定两个整数 n 和 k，返回 1 ... n 中所有可能的 k 个数的组合。
+# 示例:
+# 输入: n = 4, k = 2
+# 输出:
+# [
+#   [2,4],
+#   [3,4],
+#   [2,3],
+#   [1,2],
+#   [1,3],
+#   [1,4],
+# ]
+# def combine(self, n: int, k: int) -> List[List[int]]:
+
+
+# 思路：回溯, 经典的基础回溯算法(组合, 不可重用, 没有重复元素)
+# 我将使用缩小可选范围来剪枝(125 和512, 在首位是5的时候, 是不存在1和2可选的)
+# 由于只能在index到达指定位置时才收集答案, 所以无论是缩小可选范围还是
+# 制visit表都需要增加递归终止条件
+
+
+class Solution:
+    def combine(self, n, k):
+        self.lst = []
+        self.bt(n, k, 0, 1, [])
+        return self.lst
+
+    def bt(self, n, k, index, lstindex, lst):
+        if index >= k:
+            self.lst.append(lst[:])
+            return
+        for i in range(lstindex, n+1):
+            if n+1-i >= k-index:
+                lst.append(i)
+                self.bt(n, k, index+1, i+1, lst)
+                lst.pop()
+        return
