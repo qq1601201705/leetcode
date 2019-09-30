@@ -1,0 +1,79 @@
+# 给定一个可包含重复数字的序列，返回所有不重复的全排列。
+# 示例:
+# 输入: [1,1,2]
+# 输出:
+# [
+#   [1,1,2],
+#   [1,2,1],
+#   [2,1,1]
+# ]
+# def permuteUnique(self, nums: List[int]) -> List[List[int]]:
+
+
+# 思路：典型的回溯法中, 由于元素不可复用, 且存在重复元素
+# 所以解法是基础回溯算法(使用一个检查表或者使用哈希)
+# 且这里的例子说明112和211不算重复(即相同的元素出现并不算重复)
+# 只需要用检查表即可, 不需要用到收缩列表的方法
+# (因为收缩列表是带了剪枝功能的, 但是211在本题不算枝节)
+# 由于元素的值之间没有关联性, 所以采用字典作为检查表容器
+# 存在剪枝情况, 关于如何剪枝, 在我的leetcode解题集的首页有一个关于回溯法中有关剪枝
+# 的具体情况分析和应对策略的总结, 这里将采用排序后在for循环内部否决的方式来剪枝
+
+
+class Solution:
+    def permuteUnique(self, nums):
+        if nums == []:
+            return []
+        self.res = []
+        nums.sort()
+        self.visited = {}
+        for i in nums:
+            if i not in self.visited:
+                self.visited[i] = 1
+            else:
+                self.visited[i] += 1
+        self.dfs(nums, 0, [])
+        return self.res
+
+    def dfs(self, nums, index, lst):
+        if index == len(nums):
+            self.res.append(lst[:])
+            return
+        rec = nums[0]-1
+        for i in self.visited:
+            if self.visited[i] > 0 and i > rec: # 这里的i > rec就是循环内部剪枝
+                lst.append(i)
+                self.visited[i] -= 1
+                self.dfs(nums, index+1, lst)
+                lst.pop()
+                self.visited[i] += 1
+                rec = i
+        return
+
+
+# 直接在一个数组上进行记录(不使用字典), 这个数组上的索引对应着排序后的数组的索引
+class Solution:
+    def permuteUnique(self, nums):
+        if nums == []:
+            return []
+        self.res = []
+        nums.sort()
+        self.size = len(nums)
+        self.visited = [True] * self.size
+        self.dfs(nums, 0, [])
+        return self.res
+
+    def dfs(self, nums, index, lst):
+        if index == self.size:
+            self.res.append(lst[:])
+            return
+        rec = nums[0] - 1
+        for i in range(self.size):
+            if self.visited[i] and i > rec:# 这里的nums[i] > rec就是循环内部剪枝
+                lst.append(nums[i])
+                self.visited[i] = False
+                self.dfs(nums, index + 1, lst)
+                lst.pop()
+                self.visited[i] = True
+                rec = nums[i]
+        return
