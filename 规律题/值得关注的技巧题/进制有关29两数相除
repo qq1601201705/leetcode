@@ -67,7 +67,7 @@ class Solution:
         return min(res, 2147483647)
 
 
-# # 被除数进制表
+# 被除数进制表
 class Solution:
     def divide(self, dividend: int, divisor: int) -> int:
         sign = -1
