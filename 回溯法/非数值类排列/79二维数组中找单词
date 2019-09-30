@@ -1,0 +1,76 @@
+# 给定一个二维网格和一个单词，找出该单词是否存在于网格中。
+# 单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+# 示例:
+# board =
+# [
+#   ['A','B','C','E'],
+#   ['S','F','C','S'],
+#   ['A','D','E','E']
+# ]
+# 给定 word = "ABCCED", 返回 true.
+# 给定 word = "SEE", 返回 true.
+# 给定 word = "ABCB", 返回 false.
+# def exist(self, board: List[List[str]], word: str) -> bool:
+
+
+# 思路：这是典型的基于图类型的回溯法, 在回溯法的剪枝策略分析的时候有提到过
+# 对着这种非数组类的排列问题, 要用到判断表, 然后针对四个方向的可能都进行回溯尝试
+# 如果所有尝试都没找到答案, 则False, 如果找到有答案, 则True
+# 由于给定的是单词, 所以一定有首位字母, 对于与首位字母不符的字母, 不需要进行
+# 深度优先搜索/回溯, 直接跳过
+
+
+class Solution:
+    def exist(self, board, word):
+        self.size = len(word)
+        if self.size < 1:
+            return None
+        lst = []
+        self.d = len(board)
+        self.b = len(board[0])
+        self.total = []
+        for i in range(self.d):
+            self.total.append([True] * self.b)
+        for i in range(self.d):
+            for n in range(self.b):
+                if board[i][n] == word[0]:
+                    lst.append([i, n])
+        if lst == []:
+            return False
+        self.res = None
+        for i in lst:
+            if len(word) == 1:
+                return True
+            self.backtrack(i, 0, board, word)
+            if self.res:
+                return True
+        return False
+
+    def backtrack(self, start, index, board, word):
+        if index == self.size:
+            self.res = True
+            return True
+        if board[start[0]][start[1]] == word[index] and self.total[start[0]][start[1]]:
+            self.total[start[0]][start[1]] = False
+            if 0 < start[0]:
+                start[0] -= 1
+                if self.backtrack(start, index + 1, board, word):
+                    return True
+                start[0] += 1
+            if self.d - 1 > start[0]:
+                start[0] += 1
+                if self.backtrack(start, index + 1, board, word):
+                    return True
+                start[0] -= 1
+            if 0 < start[1]:
+                start[1] -= 1
+                if self.backtrack(start, index + 1, board, word):
+                    return True
+                start[1] += 1
+            if self.b - 1 > start[1]:
+                start[1] += 1
+                if self.backtrack(start, index + 1, board, word):
+                    return True
+                start[1] -= 1
+            self.total[start[0]][start[1]] = True
+        return False
